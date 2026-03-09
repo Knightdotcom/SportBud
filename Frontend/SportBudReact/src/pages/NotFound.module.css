@@ -1,0 +1,5 @@
+.wrapper { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 50vh; gap: 1rem; }
+.code { font-size: 5rem; font-weight: 900; color: #f97316; margin: 0; }
+.message { font-size: 1.2rem; color: #64748b; }
+.btn { padding: 0.7rem 1.5rem; background: #f97316; color: #fff; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 1rem; }
+.btn:hover { background: #ea580c; }

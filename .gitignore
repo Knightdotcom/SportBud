@@ -1,0 +1,21 @@
+# .NET
+bin/
+obj/
+*.user
+*.suo
+.vs/
+*.DotSettings
+appsettings.Development.json
+
+# Node / React
+node_modules/
+dist/
+.env
+.env.local
+
+# Claude
+.claude/
+
+# OS
+.DS_Store
+Thumbs.db

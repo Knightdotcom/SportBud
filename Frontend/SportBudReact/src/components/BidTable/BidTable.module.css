@@ -1,0 +1,48 @@
+.wrapper { overflow-x: auto; padding: 1rem; }
+.table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+.thead th {
+  background: #1a1a2e;
+  color: #f8fafc;
+  padding: 0.75rem 1rem;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.row { border-bottom: 1px solid #e2e8f0; }
+.row:hover { background-color: #f8fafc; }
+.row td { padding: 0.75rem 1rem; color: #334155; vertical-align: middle; }
+.actions { width: 110px; }
+.actionsCell { text-align: center; }
+.dangerBtn {
+  background: #fee2e2;
+  color: #b91c1c;
+  border: 1px solid #fca5a5;
+  border-radius: 6px;
+  padding: 0.3rem 0.65rem;
+  font-size: 0.8rem;
+  cursor: pointer;
+  font-weight: 600;
+}
+.dangerBtn:hover { background: #fecaca; }
+.linkBtn {
+  background: none;
+  border: none;
+  color: #f97316;
+  cursor: pointer;
+  font-weight: 600;
+  text-decoration: underline;
+  font-size: 0.88rem;
+  padding: 0;
+}
+.muted { color: #94a3b8; }
+.timeOpen { color: #16a34a; font-weight: 600; }
+.timeClosed { color: #94a3b8; }
+.emptyCard { text-align: center; padding: 2rem; color: #64748b; }
+@media (max-width: 640px) {
+  .table, .thead, .row, .row td, .thead th { display: block; }
+  .thead { display: none; }
+  .row { margin-bottom: 1rem; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.5rem; }
+  .row td::before { content: attr(data-label); font-weight: 700; display: block; font-size: 0.75rem; color: #64748b; margin-bottom: 0.15rem; }
+}

@@ -1,0 +1,30 @@
+.wrapper { overflow-x: auto; padding: 1rem; }
+.table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+.thead th {
+  background: #1a1a2e;
+  color: #f8fafc;
+  padding: 0.75rem 1rem;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.row { border-bottom: 1px solid #e2e8f0; }
+.row:hover { background-color: #f8fafc; }
+.row td { padding: 0.75rem 1rem; color: #334155; vertical-align: middle; }
+.actions { width: 160px; }
+.actionsCell { display: flex; gap: 0.4rem; }
+.activeYes { background: #dcfce7; color: #166534; padding: 0.2rem 0.6rem; border-radius: 999px; font-size: 0.78rem; font-weight: 600; }
+.activeNo { background: #fee2e2; color: #991b1b; padding: 0.2rem 0.6rem; border-radius: 999px; font-size: 0.78rem; font-weight: 600; }
+.disableBtn { background: #fee2e2; color: #b91c1c; border: 1px solid #fca5a5; border-radius: 6px; padding: 0.3rem 0.6rem; font-size: 0.8rem; cursor: pointer; }
+.disableBtn:disabled { opacity: 0.4; cursor: not-allowed; }
+.enableBtn { background: #dcfce7; color: #166534; border: 1px solid #86efac; border-radius: 6px; padding: 0.3rem 0.6rem; font-size: 0.8rem; cursor: pointer; }
+.enableBtn:disabled { opacity: 0.4; cursor: not-allowed; }
+.empty { text-align: center; padding: 1.5rem; color: #64748b; }
+@media (max-width: 640px) {
+  .table, .thead, .row, .row td, .thead th { display: block; }
+  .thead { display: none; }
+  .row { margin-bottom: 1rem; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.5rem; }
+  .row td::before { content: attr(data-label); font-weight: 700; display: block; font-size: 0.75rem; color: #64748b; }
+}

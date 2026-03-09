@@ -1,0 +1,13 @@
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  text-decoration: none;
+}
+.icon { font-size: 1.4rem; }
+.text {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: #f97316;
+  letter-spacing: -0.5px;
+}
