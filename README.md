@@ -1,55 +1,61 @@
-# SportBud – Auktionsplattform för Sportprylar
+# SportBud — Auktionsplattform för Sportprylar
 
-SportBud är en fullstack-webbapplikation där användare kan lägga upp och buda på begagnade sportprylar. Projektet består av ett REST API byggt i ASP.NET Core och ett frontend byggt i React med TypeScript.
+SportBud är en fullstack-webbapplikation där användare kan lägga upp och buda på begagnade sportprylar. Projektet är byggt med ASP.NET Core 9 som backend-API och React 19 med TypeScript som frontend.
 
 ---
 
 ## Teknikstack
 
 ### Backend
-- **ASP.NET Core Web API** (.NET 9) – hanterar all affärslogik och data
-- **Entity Framework Core** – kommunikation med databasen via kod (ORM)
-- **SQL Server / LocalDB** – lagrar användare, auktioner och bud
-- **ASP.NET Core Identity** – inbyggt system för användarhantering och lösenordssäkerhet
-- **JWT (JSON Web Token)** – autentisering, användaren får en token vid inloggning
-- **AutoMapper** – konverterar mellan databasentiteter och DTO:er
-- **Swagger / Swashbuckle** – automatiskt genererat API-dokumentationsgränssnitt
+| Teknologi | Användning |
+|-----------|------------|
+| **ASP.NET Core Web API (.NET 9)** | REST API, affärslogik och endpoints |
+| **Entity Framework Core** | ORM för databashantering |
+| **SQL Server / LocalDB** | Lagring av användare, auktioner och bud |
+| **ASP.NET Core Identity** | Användarhantering, lösenordshashning |
+| **JWT (JSON Web Tokens)** | Stateless autentisering |
+| **AutoMapper** | Mappning mellan entiteter och DTO:er |
+| **Swagger / Swashbuckle** | Interaktiv API-dokumentation |
 
 ### Frontend
-- **React 19** med **TypeScript** – komponentbaserat användargränssnitt
-- **Vite** – snabb utvecklingsserver och byggverktyg
-- **React Router** – klientsidesnavigering mellan sidor
-- **React Bootstrap + Bootstrap** – responsiv layout och färdiga UI-komponenter
-- **Context API** – global state-hantering (inloggning och auktioner)
-- **jwt-decode** – läser av innehållet i JWT-token i webbläsaren
+| Teknologi | Användning |
+|-----------|------------|
+| **React 19 + TypeScript** | Komponentbaserat användargränssnitt |
+| **Vite** | Snabb utvecklingsserver och byggverktyg |
+| **React Router** | Klientsidesnavigering |
+| **React Bootstrap + Bootstrap** | Responsiv layout och UI-komponenter |
+| **Context API** | Global state-hantering (auth + auktioner) |
+| **jwt-decode** | Avkodning av JWT-token i webbläsaren |
 
 ---
 
 ## Arkitektur
 
-### Backend – lager-struktur
+### Backend — lagerstruktur
+
 ```
-Controllers      → tar emot HTTP-anrop och returnerar svar
-Services         → innehåller affärslogiken
-Repositories     → kommunicerar med databasen via Entity Framework
-Entities         → databasmodeller (Auction, Bid, AppUser)
-DTO:er           → dataöverföringsobjekt, bestämmer vad som skickas/tas emot
+SportBud.Api/
+├── Controllers/        → Tar emot HTTP-anrop och returnerar svar
+├── Services/           → Affärslogik
+├── Repositories/       → Databasåtkomst via Entity Framework
+├── Entities/           → Databasmodeller (Auction, Bid, AppUser)
+├── DTOs/               → Dataöverföringsobjekt
+└── Extensions/         → Konfigurationshjälpare (JWT, CORS, Swagger)
 ```
 
-Varje lager kommunicerar bara med lagret under sig. Controllern anropar service, service anropar repo, repo pratar med databasen. Detta gör koden lättare att underhålla och testa.
+Varje lager kommunicerar bara med lagret under sig. Controllern anropar service, service anropar repo, repo kommunicerar med databasen. Alla serviceoperationer returnerar ett `Result<T>`-objekt med antingen data eller ett felmeddelande — exceptions används aldrig för förväntade fel.
 
-### Result-mönster
-Alla service-metoder returnerar ett `Result<T>`-objekt som innehåller antingen data eller ett felmeddelande. Det undviker undantag (exceptions) för förväntade fel.
+### Frontend — mappstruktur
 
-### Frontend – mappstruktur
 ```
-components/    → presentationskomponenter (Header, AuctionCard, Searchbar m.fl.)
-containers/    → logikkomponenter som hämtar data och hanterar events
-pages/         → sidkomponenter kopplade till routes
-context/       → global state via AuthProvider och AuctionProvider
-services/      → alla API-anrop mot backend
-types/         → TypeScript-interface för all data
-helpers/       → hjälpfunktioner (t.ex. datumformatering)
+src/
+├── components/         → Presentationskomponenter (Header, AuctionCard, Searchbar m.fl.)
+├── containers/         → Logikkomponenter som hämtar data och hanterar events
+├── pages/              → Sidkomponenter kopplade till routes
+├── context/            → Global state via AuthProvider och AuctionProvider
+├── services/           → Alla API-anrop mot backend
+├── types/              → TypeScript-interface för all data
+└── helpers/            → Hjälpfunktioner (t.ex. datumformatering)
 ```
 
 ---
@@ -59,31 +65,31 @@ helpers/       → hjälpfunktioner (t.ex. datumformatering)
 ### Användare
 - Registrera konto med användarnamn, e-post och lösenord
 - Logga in och få en JWT-token som sparas i webbläsaren
-- Se och uppdatera sitt konto via "Min sida"
+- Se och uppdatera sin profil via "Min sida"
 - Byta lösenord
 
 ### Auktioner
-- Se alla öppna auktioner på startsidan
-- Söka efter auktioner med sökfält
+- Bläddra bland alla öppna auktioner på startsidan
+- Söka och filtrera auktioner
 - Klicka på en auktion för att se detaljer och lägga bud
-- Skapa egna auktioner (inloggad krävs)
-- Auktioner stängs automatiskt när slutdatum passeras
+- Skapa egna auktioner (kräver inloggning)
+- Auktioner stängs automatiskt när slutdatumet passeras
 
 ### Bud
 - Lägga bud på öppna auktioner
-- Högsta bud visas i realtid på auktionskortet
-- Bud under nuvarande högstbud accepteras inte
+- Högsta aktuella bud visas i realtid
+- Bud som är lägre än nuvarande högstbud avvisas
 
-### Adminroller
-- Admin kan se alla användare och auktioner
-- Admin kan avaktivera användare och auktioner
-- Separata rollkontroller med `[Authorize(Roles = "Admin")]`
+### Admin
+- Adminpanel med översikt av alla användare och auktioner
+- Avaktivera användare och auktioner
+- Rollbaserad åtkomstkontroll via `[Authorize(Roles = "Admin")]`
 
 ---
 
 ## Roller och testanvändare
 
-Dessa användare skapas automatiskt när applikationen startas (seed-data):
+Dessa användare skapas automatiskt vid applikationsstart (seed-data):
 
 | Användarnamn | Lösenord   | Roll  |
 |--------------|------------|-------|
@@ -95,54 +101,53 @@ Dessa användare skapas automatiskt när applikationen startas (seed-data):
 
 ---
 
-## API-endpoints (urval)
+## API-endpoints
 
-| Metod  | Endpoint              | Beskrivning                        | Auth krävs |
-|--------|-----------------------|------------------------------------|------------|
-| POST   | /login                | Logga in, returnerar JWT-token     | Nej        |
-| POST   | /api/User             | Registrera ny användare            | Nej        |
-| GET    | /open/all             | Hämta alla öppna auktioner         | Nej        |
-| GET    | /open/search          | Sök bland öppna auktioner          | Nej        |
-| POST   | /api/Auction          | Skapa ny auktion                   | Ja         |
-| PUT    | /api/Auction          | Uppdatera auktion                  | Ja         |
-| POST   | /api/Bid              | Lägga ett bud                      | Ja         |
-| GET    | /allUsers             | Hämta alla användare (admin)       | Admin      |
-| PUT    | /deactivate           | Avaktivera auktion (admin)         | Admin      |
+| Metod  | Endpoint              | Beskrivning                          | Auth      |
+|--------|-----------------------|--------------------------------------|-----------|
+| POST   | `/login`              | Logga in — returnerar JWT-token      | Nej       |
+| POST   | `/api/User`           | Registrera ny användare              | Nej       |
+| GET    | `/open/all`           | Hämta alla öppna auktioner           | Nej       |
+| GET    | `/open/search`        | Sök bland öppna auktioner            | Nej       |
+| POST   | `/api/Auction`        | Skapa ny auktion                     | JWT       |
+| PUT    | `/api/Auction`        | Uppdatera auktion                    | JWT       |
+| DELETE | `/api/Auction`        | Ta bort auktion                      | JWT       |
+| POST   | `/api/Bid`            | Lägg ett bud                         | JWT       |
+| GET    | `/allUsers`           | Hämta alla användare                 | Admin     |
+| PUT    | `/deactivate`         | Avaktivera auktion                   | Admin     |
+
+> Fullständig dokumentation finns i Swagger UI när API:et körs.
 
 ---
 
-## Så här kör du projektet
+## Kom igång
 
 ### Krav
 - Visual Studio 2022 med .NET 9 SDK
-- SQL Server LocalDB (följer med Visual Studio)
-- Node.js (LTS) – för frontend
+- SQL Server LocalDB (medföljer Visual Studio)
+- Node.js LTS
 
-### Backend
+### 1. Starta backend
+
 1. Öppna `SportBud.Api.sln` i Visual Studio
-2. Kontrollera att connection string i `appsettings.Development.json` stämmer
-3. Öppna **Package Manager Console** och kör:
-```
+2. Konfigurera connection string i `appsettings.Development.json`
+3. Kör migrationer i **Package Manager Console**:
+```bash
 Add-Migration InitialCreate
 Update-Database
 ```
-4. Tryck **F5** eller kör `dotnet run` – backend startar på `https://localhost:7064`
-5. Swagger finns på `https://localhost:7064/swagger`
+4. Starta med **F5** — API:et körs på `https://localhost:7064`
+5. Swagger UI finns på `https://localhost:7064/swagger`
 
-### Frontend
-1. Öppna en terminal och navigera till frontend-mappen:
-```
+### 2. Starta frontend
+
+```bash
 cd SportBud/Frontend/SportBudReact
-```
-2. Installera paket:
-```
 npm install
-```
-3. Starta frontend:
-```
 npm run dev
 ```
-4. Öppna webbläsaren på `http://localhost:5173`
+
+Öppna webbläsaren på `http://localhost:5173`
 
 ---
 
@@ -150,28 +155,30 @@ npm run dev
 
 - Lösenord hashas automatiskt av ASP.NET Core Identity (bcrypt)
 - JWT-token valideras vid varje skyddat anrop
-- Token innehåller användar-ID och roll – backend verifierar att rätt användare gör rätt sak
-- CORS är konfigurerat så att endast frontend-ursprunget tillåts anropa API:et
+- Token innehåller användar-ID och roll — backend verifierar att rätt användare gör rätt sak
+- CORS är konfigurerat så att endast tillåtna ursprung kan anropa API:et
 
 ---
 
-## Databasmodell (förenklad)
+## Databasmodell
 
 ```
 AppUser
-  - Id, UserName, Email, FirstName, LastName, IsActiveUser
+  ├── Id, UserName, Email, FirstName, LastName
+  └── IsActiveUser
 
 Auction
-  - Id, Title, Description, StartPrice, StartDateUtc, EndDateUtc
-  - IsOpen, IsDeactivatedByAdmin, ImageUrl
-  - FK → AppUser (UserId)
+  ├── Id, Title, Description, StartPrice
+  ├── StartDateUtc, EndDateUtc, IsOpen, IsDeactivatedByAdmin
+  ├── ImageUrl
+  └── FK → AppUser (UserId)
 
 Bid
-  - Id, Amount, CreatedAt
-  - FK → Auction (AuctionId)
-  - FK → AppUser (UserId)
+  ├── Id, Amount, CreatedAt
+  ├── FK → Auction (AuctionId)
+  └── FK → AppUser (UserId)
 ```
 
 ---
 
-*Projektet är byggt som en inlämningsuppgift och demonstrerar fullstack-webbutveckling med modern teknik inom både .NET och React-ekosystemet.*
+*Projektet demonstrerar fullstack-webbutveckling med modern teknik inom .NET 9 och React-ekosystemet.*
